@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mai Websait</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: white;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Welcome screen */
+    #welcome {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: white;
+      color: black;
+
+      font-size: clamp(30px, 6vw, 75px);
+      font-weight: bold;
+
+      transition: opacity 1s ease;
+    }
+
+    #welcome.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Website title */
+    #title {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      z-index: 500;
+
+      font-size: 24px;
+      font-weight: bold;
+
+      color: black;
+      opacity: 0.8;
+
+      pointer-events: none;
+    }
+
+    /* The fox button */
+    #foxButton {
+      position: fixed;
+
+      left: 50%;
+      bottom: 25px;
+
+      transform: translateX(-50%);
+
+      z-index: 2000;
+
+      padding: 15px 25px;
+
+      border: 3px solid black;
+      border-radius: 12px;
+
+      background: white;
+      color: black;
+
+      font-size: 18px;
+      font-weight: bold;
+
+      cursor: pointer;
+
+      box-shadow: 5px 5px 0 black;
+    }
+
+    #foxButton:hover {
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    #foxButton:active {
+      transform: translateX(-50%) scale(0.95);
+      box-shadow: 2px 2px 0 black;
+    }
+
+    /* Mickey images */
+    .mickey {
+      position: absolute;
+
+      width: 190px;
+      height: auto;
+
+      user-select: none;
+      pointer-events: none;
+
+      will-change: transform;
+    }
+
+    /* Crazy GIFs */
+    .chaosGif {
+      position: absolute;
+
+      width: 150px;
+      height: auto;
+
+      user-select: none;
+      pointer-events: none;
+
+      will-change: transform;
+    }
+
+    /* Crazy mode */
+    body.chaos {
+      animation: rainbow 0.5s infinite;
+    }
+
+    @keyframes rainbow {
+      0%   { background: white; }
+      20%  { background: #ffb3b3; }
+      40%  { background: #b3ffff; }
+      60%  { background: #ffff99; }
+      80%  { background: #d9b3ff; }
+      100% { background: white; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Welcome message -->
+  <div id="welcome">
+    welcom tu mai websait
+  </div>
+
+  <!-- Title -->
+  <div id="title">
+    mai websait :D
+  </div>
+
+  <!-- Mickeys -->
+  <img
+    class="mickey"
+    src="classic-mickey-mouse5.png"
+    alt=""
+  >
+
+  <img
+    class="mickey"
+    src="classic-mickey-mouse7.png"
+    alt=""
+  >
+
+  <!-- THE CHAOS BUTTON -->
+  <button id="foxButton">
+    the quick brown fox jumps over the lazy dog
+  </button>
+
+
+  <script>
+
+    /*
+      ==========================================
+      MICKEY DVD LOGO BOUNCING
+      ==========================================
+    */
+
+    const mickeys = document.querySelectorAll(".mickey");
+
+    const objects = [];
+
+    mickeys.forEach((mickey, index) => {
+
+      objects.push({
+        element: mickey,
+
+        x: 100 + index * 250,
+        y: 150 + index * 100,
+
+        dx: index === 0 ? 2.7 : -3.1,
+        dy: index === 0 ? 2.2 : 2.8
+      });
+
+    });
+
+
+    /*
+      ==========================================
+      CHAOS GIFS
+      ==========================================
+    */
+
+    const chaosObjects = [];
+
+
+    /*
+      ==========================================
+      NORMAL + CHAOS ANIMATION
+      ==========================================
+    */
+
+    function animate() {
+
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+
+      /*
+        Move Mickeys
+      */
+
+      objects.forEach(obj => {
+
+        const width = obj.element.offsetWidth;
+        const height = obj.element.offsetHeight;
+
+        obj.x += obj.dx;
+        obj.y += obj.dy;
+
+
+        // Left wall
+        if (obj.x <= 0) {
+          obj.x = 0;
+          obj.dx *= -1;
+        }
+
+        // Right wall
+        if (obj.x + width >= screenWidth) {
+          obj.x = screenWidth - width;
+          obj.dx *= -1;
+        }
+
+        // Top wall
+        if (obj.y <= 0) {
+          obj.y = 0;
+          obj.dy *= -1;
+        }
+
+        // Bottom wall
+        if (obj.y + height >= screenHeight) {
+          obj.y = screenHeight - height;
+          obj.dy *= -1;
+        }
+
+
+        obj.element.style.transform =
+          `translate(${obj.x}px, ${obj.y}px)`;
+
+      });
+
+
+      /*
+        Move all crazy GIFs
+      */
+
+      chaosObjects.forEach(obj => {
+
+        const width = obj.element.offsetWidth;
+        const height = obj.element.offsetHeight;
+
+        obj.x += obj.dx;
+        obj.y += obj.dy;
+
+
+        // Left
+        if (obj.x <= 0) {
+          obj.x = 0;
+          obj.dx *= -1;
+        }
+
+        // Right
+        if (obj.x + width >= screenWidth) {
+          obj.x = screenWidth - width;
+          obj.dx *= -1;
+        }
+
+        // Top
+        if (obj.y <= 0) {
+          obj.y = 0;
+          obj.dy *= -1;
+        }
+
+        // Bottom
+        if (obj.y + height >= screenHeight) {
+          obj.y = screenHeight - height;
+          obj.dy *= -1;
+        }
+
+
+        obj.element.style.transform =
+          `translate(${obj.x}px, ${obj.y}px)`;
+
+      });
+
+
+      requestAnimationFrame(animate);
+    }
+
+
+    /*
+      ==========================================
+      SPAWN CHAOS
+      ==========================================
+    */
+
+    function spawnChaos() {
+
+      document.body.classList.add("chaos");
+
+
+      /*
+        Spawn 15 GIFs
+      */
+
+      for (let i = 0; i < 15; i++) {
+
+        const gif = document.createElement("img");
+
+        gif.src = "chaos.gif";
+
+        gif.className = "chaosGif";
+
+        gif.alt = "";
+
+
+        /*
+          Random size
+        */
+
+        const size =
+          Math.floor(Math.random() * 120) + 80;
+
+        gif.style.width = size + "px";
+
+
+        document.body.appendChild(gif);
+
+
+        /*
+          Random starting position
+        */
+
+        const x =
+          Math.random() *
+          (window.innerWidth - size);
+
+        const y =
+          Math.random() *
+          (window.innerHeight - size);
+
+
+        /*
+          Random speed
+        */
+
+        let dx =
+          (Math.random() * 6) - 3;
+
+        let dy =
+          (Math.random() * 6) - 3;
+
+
+        /*
+          Make sure they actually move
+        */
+
+        if (Math.abs(dx) < 1) {
+          dx = dx < 0 ? -1.5 : 1.5;
+        }
+
+        if (Math.abs(dy) < 1) {
+          dy = dy < 0 ? -1.5 : 1.5;
+        }
+
+
+        chaosObjects.push({
+
+          element: gif,
+
+          x: x,
+          y: y,
+
+          dx: dx,
+          dy: dy
+
+        });
+
+      }
+
+
+      /*
+        Make the button itself start shaking
+      */
+
+      const button =
+        document.getElementById("foxButton");
+
+      button.style.animation =
+        "shake 0.1s infinite";
+    }
+
+
+    /*
+      ==========================================
+      BUTTON
+      ==========================================
+    */
+
+    document
+      .getElementById("foxButton")
+      .addEventListener("click", spawnChaos);
+
+
+    /*
+      ==========================================
+      WELCOME MESSAGE
+      ==========================================
+    */
+
+    setTimeout(() => {
+
+      document
+        .getElementById("welcome")
+        .classList.add("hidden");
+
+    }, 2500);
+
+
+    /*
+      START EVERYTHING
+    */
+
+    animate();
+
+  </script>
+
+
+  <style>
+
+    /*
+      Button shaking after activating chaos
+    */
+
+    @keyframes shake {
+
+      0% {
+        transform:
+          translateX(-50%)
+          rotate(-3deg);
+      }
+
+      50% {
+        transform:
+          translateX(-50%)
+          rotate(3deg);
+      }
+
+      100% {
+        transform:
+          translateX(-50%)
+          rotate(-3deg);
+      }
+
+    }
+
+  </style>
+
+</body>
+</html>
